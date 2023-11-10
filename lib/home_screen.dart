@@ -130,7 +130,7 @@ Widget setPage(BuildContext context, param1) {
             ),
             IconButton(
               icon: Icon(Icons.notifications, color: red800),
-              onPressed: () {},
+              onPressed: () { },
             )
           ],
         ),
