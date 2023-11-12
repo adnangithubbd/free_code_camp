@@ -1,9 +1,10 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:badges/badges.dart';
-
+import 'package:badges/badges.dart' as badges;
+import 'package:http/http.dart' as http;
 
 enum Gender { none, male, female, others }
 
@@ -239,12 +240,9 @@ class _FirstScreenState extends State<FirstScreen> {
             CupertinoButton(
                 child: Text('click'),
                 onPressed: () {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('clicked')));
-    }
-
-
-              ),
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('clicked')));
+                }),
             Text(
               'First screen ',
               style: TextStyle(color: Colors.blueAccent),
@@ -265,12 +263,11 @@ class _FirstScreenState extends State<FirstScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()  async{
+        onPressed: () async {
           final Uri _url = Uri.parse('https://flutter.dev');
           await launchUrl(_url);
 
           setState(() {
-
             index = (index + 1) % customizations.length;
           });
         },
@@ -281,6 +278,7 @@ class _FirstScreenState extends State<FirstScreen> {
       ),
     );
   }
+
   Future<void> _launchUrl(Uri url) async {
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
@@ -290,22 +288,268 @@ class _FirstScreenState extends State<FirstScreen> {
   }
 }
 
-class SecondScreen extends StatelessWidget {
+class SecondScreen extends StatefulWidget {
+  @override
+  State<SecondScreen> createState() => _SecondScreenState();
+}
+
+class _SecondScreenState extends State<SecondScreen> {
+  bool showProgress = true;
+  String? res = null;
+  bool? isConnected;
+
+  _wait() async {
+    res = 'some value';
+  }
+
+  Future<bool> checkInternetStatus() async {
+    try {
+      final url = Uri.https('google.com');
+      var response = await http.head(url);
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Second Screen'),
+    return Scaffold(
+
+      body: Column(
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height/3,),
+          Center(
+            child: Container(
+                height: 120.0,
+                width: 120.0,
+                color: Colors.blue[50],
+                child: TextButton(
+                  onPressed: () {
+
+                  },
+                  child: Icon(Icons.currency_lira),
+                )),
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          _dialog(context);
+        },
+      ),
+    );
+  }
+
+
+  TextEditingController _controlled = TextEditingController();
+
+  void _dialog(BuildContext contex) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: const Text('AlertDialog title'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('AlertDialog description !'),
+                  const Text('Input your name '),
+                  TextField(
+                    controller: _controlled,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your name',
+                    ),
+                  )
+                ],
+              ),
+              contentPadding: const EdgeInsets.all(16.0),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(const SnackBar(content: Text('Cancell')));
+                    Navigator.pop(context);
+                  },
+                  child: Text('Cancell'),
+                ),
+                TextButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(_controlled.text)));
+                      Navigator.pop(context);
+                    },
+                    child: Text('Show'))
+              ],
+            ));
+  }
+}
+
+class DialogExample extends StatelessWidget {
+  DialogExample({super.key});
+
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () => showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('AlertDialog Title'),
+          content: Row(
+            children: [
+              Text('AlertDialog description'),
+              Text('Input your name'),
+              TextField(
+                controller: _controller,
+                decoration:
+                    const InputDecoration(hintText: 'Enter your name hint '),
+              )
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(const SnackBar(content: Text('Canceled')));
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(_controller.text)));
+                Navigator.pop(context, 'OK');
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+      child: const Text('Show Dialog'),
     );
   }
 }
 
-class ThirdScreen extends StatelessWidget {
+class ThirdScreen extends StatefulWidget {
+  @override
+  State<ThirdScreen> createState() => _ThirdScreenState();
+}
+
+class _ThirdScreenState extends State<ThirdScreen> {
+  int counter = 0;
+  Color _discolor = Colors.black;
+  int _selectedIndex = 0;
+
+  _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  _makeZero() {
+    setState(() {
+      counter = 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Badge(
-        badgeContent: Text('3'),
-        child: Icon(Icons.settings),
+    List<Widget> _list = [FirstScreen(), SecondScreen(), ThirdScreen()];
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                  disabledColor: Colors.blueAccent,
+                  onPressed: () {
+                    setState(() {
+                      if (counter != 0) {
+                        counter--;
+                      } else {
+                        _discolor = Colors.green;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Nothing to remov...')));
+                      }
+                    });
+                  },
+                  icon: Icon(Icons.remove)),
+              SizedBox(
+                width: 35,
+              ),
+              Center(
+                child: badges.Badge(
+                  badgeContent: Text(
+                    '$counter',
+                    style: TextStyle(color: Colors.blueAccent),
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.calendar_today_sharp),
+                    onPressed: () {
+                      setState(() {
+                        _makeZero();
+                      });
+                    },
+                  ),
+                ),
+              ),
+              IconButton(
+                  onPressed: () {
+                    setState(() {
+                      counter++;
+                    });
+                  },
+                  icon: Icon(Icons.add)),
+              SizedBox(
+                height: 50,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 100,
+            width: 100,
+            child: Container(
+              height: 100,
+              width: 100,
+              color: Colors.blueAccent,
+              child: Column(
+                children: [
+                  Text('Please wait... '),
+                ],
+              ),
+              //////////////////
+            ),
+          )
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home_work), label: 'HOme'),
+          BottomNavigationBarItem(icon: Icon(Icons.alarm), label: 'Alarm'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.done_outline_sharp), label: 'Done'),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.red,
+        onTap: _onItemTapped,
       ),
     );
   }
@@ -317,6 +561,56 @@ class FourthScreen extends StatelessWidget {
     return Center(
       child: Text('Fourth Screen'),
     );
+  }
+}
+
+class RadioExample extends StatefulWidget {
+  const RadioExample({Key? key});
+
+  @override
+  State<RadioExample> createState() => _RadioExampleState();
+}
+
+enum SingingCharacter { lafayette, jefferson }
+
+class _RadioExampleState extends State<RadioExample> {
+  SingingCharacter? _character = SingingCharacter.lafayette;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            title: const Text('Lafayette'),
+            leading: Radio<SingingCharacter>(
+              value: SingingCharacter.lafayette,
+              groupValue: _character,
+              onChanged: (SingingCharacter? value) {
+                setState(() {
+                  _character = value;
+                  print(value);
+                });
+              },
+            ),
+          ),
+          ListTile(
+            title: const Text('Thomas Jefferson'),
+            leading: Radio<SingingCharacter>(
+              value: SingingCharacter.jefferson,
+              groupValue: _character,
+              onChanged: (SingingCharacter? value) {
+                setState(() {
+                  _character = value;
+                  print(value);
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    ));
   }
 }
 
@@ -384,53 +678,3 @@ class FourthScreen extends StatelessWidget {
               )
             ],
           )*/
-
-class RadioExample extends StatefulWidget {
-  const RadioExample({Key? key});
-
-  @override
-  State<RadioExample> createState() => _RadioExampleState();
-}
-
-enum SingingCharacter { lafayette, jefferson }
-
-class _RadioExampleState extends State<RadioExample> {
-  SingingCharacter? _character = SingingCharacter.lafayette;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: SingleChildScrollView(
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            title: const Text('Lafayette'),
-            leading: Radio<SingingCharacter>(
-              value: SingingCharacter.lafayette,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                  print(value);
-                });
-              },
-            ),
-          ),
-          ListTile(
-            title: const Text('Thomas Jefferson'),
-            leading: Radio<SingingCharacter>(
-              value: SingingCharacter.jefferson,
-              groupValue: _character,
-              onChanged: (SingingCharacter? value) {
-                setState(() {
-                  _character = value;
-                  print(value);
-                });
-              },
-            ),
-          ),
-        ],
-      ),
-    ));
-  }
-}
