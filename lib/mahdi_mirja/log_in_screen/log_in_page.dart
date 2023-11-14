@@ -58,88 +58,91 @@ class _LogIn_pageState extends State<logIn_page> {
                   ]),
         ],
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height / 12,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: TextField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                  labelText: 'Enter your name',
-                  border: OutlineInputBorder(),
-                  hintText: 'User hint',
-                  hintStyle: TextStyle(
-                    color: Colors.white,
-                    fontStyle: FontStyle.italic,
-                  )),
-              //detecting enter
-              onSubmitted: (value) {
-                print(value);
-              },
-              onTap: () async {
-                await Clipboard.setData(
-                    ClipboardData(text: _usernameController.text));
-              },
-              onChanged: (nothing) {
-                print(_usernameController.text);
-              },
-              textInputAction: TextInputAction.search,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 12,
             ),
-          ),
-          Center(
-            child: Column(
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: TextField(
+                controller: _usernameController,
+                decoration: const InputDecoration(
+                    labelText: 'Enter your name',
+                    border: OutlineInputBorder(),
+                    hintText: 'User hint',
+                    hintStyle: TextStyle(
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    )),
+                //detecting enter
+                onSubmitted: (value) {
+                  print(value);
+                },
+                onTap: () async {
+                  await Clipboard.setData(
+                      ClipboardData(text: _usernameController.text));
+                },
+                onChanged: (nothing) {
+                  print(_usernameController.text);
+                },
+                textInputAction: TextInputAction.search,
+              ),
+            ),
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    'hi ya habibi.. how are you?? ',
+                    style: GoogleFonts.bodoniModa(
+                        textStyle: const TextStyle(color: Colors.indigo)),
+                  ),
+                  CheckboxDemo(),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'hi ya habibi.. how are you?? ',
-                  style: GoogleFonts.bodoniModa(
-                      textStyle: const TextStyle(color: Colors.indigo)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/mobile.png',
+                      height: 30,
+                      width: 40,
+                    ),
+                    const Text('batter bar'),
+                  ],
                 ),
-                CheckboxDemo(),
+                const SizedBox(
+                  width: 12,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/google.png',
+                      height: 30,
+                      width: 40,
+                    ),
+                    const Text('battry bar'),
+                    TextButton(
+                        onPressed: () {
+                          print('Clicked');
+                        },
+                        child: const Text('Clickable')),
+                  ],
+                ),
               ],
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/mobile.png',
-                    height: 30,
-                    width: 40,
-                  ),
-                  const Text('batter bar'),
-                ],
-              ),
-              const SizedBox(
-                width: 12,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/images/google.png',
-                    height: 30,
-                    width: 40,
-                  ),
-                  const Text('battry bar'),
-                  TextButton(
-                      onPressed: () {
-                        print('Clicked');
-                      },
-                      child: const Text('Clickable')),
-                ],
-              ),
-            ],
-          ),
-        ],
+          ],
+        ),
       ),
       drawer: DrawerDemo(),
-    ));
+    )
+    );
   }
 }
