@@ -14,7 +14,7 @@ class _TimePickerDemoState extends State<TimePickerDemo> {
   void _showTimePicker() {
     showTimePicker(context: context,
         initialTime: TimeOfDay.now()).then((value) {
-          
+
     });
   }
 
