@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:free_code_camp/carosole_slide.dart';
 import 'package:free_code_camp/mahdi_mirja/log_in_screen/log_in_page.dart';
+import 'package:free_code_camp/package_demo/animated_text.dart';
+import 'package:free_code_camp/package_demo/avatar_glow.dart';
+import 'package:free_code_camp/package_demo/flutter_neumorphism.dart';
+import 'package:free_code_camp/page_slider_indicator.dart';
+import 'package:free_code_camp/percent_indicator.dart';
 import 'package:free_code_camp/product.dart';
 import 'package:free_code_camp/profile.dart';
 import 'package:free_code_camp/koko/pull_to_refresh.dart';
 import 'package:free_code_camp/koko/responsive.dart';
 import 'package:free_code_camp/tab_bar_demo.dart';
+import 'package:free_code_camp/weather/weather_page.dart';
+import 'package:geolocator/geolocator.dart';
 
+import 'autocomplete/auto_complete.dart';
 import 'bottom_nav.dart';
+import 'carousel_slider.dart';
 import 'draft.dart';
 import 'home_screen.dart';
 
@@ -24,15 +33,6 @@ import 'mahdi_mirja/web_view.dart';
 import 'nav_rail.dart';
 
 void main() async {
-  Api api = Api();
-  await api.fetchData();
-
-  print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-
-  print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-  api.fetchData();
-   //fetchPhoto();
-  // This widget is the root of your application.
   runApp(MyApp());
 }
 
@@ -42,33 +42,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home:    TimePickerDemo(),
-    );
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home: MyCarouselSlider());
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
